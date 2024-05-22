@@ -1,0 +1,85 @@
+<div class="container d-flex flex-column justify-content-center align-items-center text-center">
+    <br>
+    <br>
+    <h2 class="display-4 mb-4 text-white">Your Reservations</h2>
+    <div class="input-group mb-3">
+      <select #meetingRoomSelect class="form-control">
+        <option value="">Select Meeting Room</option>
+        <option *ngFor="let room of meetingRooms" [value]="room._id">{{ room.name }}</option>
+      </select>
+    </div>
+    <div class="input-group mb-3">
+      <input type="date" class="form-control" placeholder="Filter by date" #dateInput>
+    </div>
+    <div class="input-group mb-3">
+      <button type="button" class="btn btn-primary" (click)="filterReservations(meetingRoomSelect.value, dateInput.value)">Filter</button>
+    </div>
+  
+    <div class="input-group mb-3">
+      <label style="padding-right: 10px;" for="statusSelect" class="text-white mr-2">Filter by status:</label>
+      <br>
+      <select #statusSelect class="form-control" (change)="filterReservationsByStatus(statusSelect.value)">
+        <option value="">Select Status</option>
+        <option value="active">Active</option>
+        <option value="past">Past</option>
+        <option value="all">All</option>
+      </select>
+    </div>
+    <div class="container-fluid">
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col">Meeting Room</th>
+              <th scope="col">Date</th>
+              <th scope="col">Start Time</th>
+              <th scope="col">End Time</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let reservation of reservations; index as i">
+              <td>
+    <ng-container *ngIf="reservation.meetingRoom.name; else otherValue">
+      {{ reservation.meetingRoom.name }}
+    </ng-container>
+    <ng-template #otherValue>
+      
+      Another Value
+    </ng-template>
+  </td>
+              <td>
+                {{ reservation.reservationDate | date:'dd/MM/yyyy' }}
+               
+              </td>
+              <td>{{ reservation.startTime | date:'HH:mm' }}</td>
+              <td>{{ reservation.endTime | date:'HH:mm' }}</td>
+              <td>
+                <div class="btn-group-vertical" role="group" aria-label="Reservation Actions">
+                  <button type="button" class="btn btn-primary animated" style="animation-name: fadeInDown;" (click)="updateReservation(reservation._id)">Update</button>
+                  <button type="button" class="btn btn-danger animated" style="animation-name: fadeInUp;" (click)="deleteReservation(reservation._id)">Cancel</button>
+  
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  
+    <div class="mt-3">
+      <button type="button" class="btn btn-success animated" style="animation-name: fadeInDown;" (click)="addReservation()">Add Reservation</button>
+    </div>
+  
+    <nav aria-label="Page navigation example" class="mt-3">
+      <ul class="pagination justify-content-center">
+        <li class="page-item" [class.disabled]="page <= 1">
+          <a type="button" class="page-link" (click)="previousPage()">Previous</a>
+        </li>
+        <li class="page-item" [class.disabled]="page >= totalPages">
+          <a type="button" class="page-link" (click)="nextPage()">Next</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+  

@@ -1,0 +1,69 @@
+import { Component, OnInit } from '@angular/core';
+import { MeetingRoom } from '../../models/MeetingRoom';
+import { MeetingRoomService } from '../../__services/meeting-room.service';
+import { Router } from '@angular/router';
+import { CalendarOptions } from '@fullcalendar/core';
+
+import { ReservationService } from '../../__services/reservation.service';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import Tooltip from 'tooltip.js'; 
+import $ from 'jquery';
+import listPlugin from '@fullcalendar/list';
+
+
+@Component({
+  selector: 'app-meeting-room-consult',
+  templateUrl: './meeting-room-consult.component.html',
+  styleUrl: './meeting-room-consult.component.css'
+})
+export class MeetingRoomConsultComponent implements OnInit {
+  meetingRoom: MeetingRoom = {} as MeetingRoom;
+  calendarOptions: CalendarOptions = {
+    initialView: window.innerWidth < 768 ? 'listWeek' : 'dayGridMonth',
+    plugins: [dayGridPlugin, listPlugin],
+    events: [],
+    displayEventTime: false,
+    eventMouseEnter: function(info) {
+      let tooltip = new Tooltip(info.el, {
+        title: info.event.title,
+        placement: 'top',
+        trigger: 'hover',
+        container: 'body'
+      });
+      tooltip.show();
+    },
+    eventMouseLeave: function(info) {
+      $('.tooltip').remove();
+    }
+  };
+  constructor(private meetingRoomService: MeetingRoomService,
+    private router: Router,
+    private reservationService: ReservationService
+    ) { }
+
+  ngOnInit(): void {
+    const meetingRoomId = this.router.url.split('/').pop();
+    if(meetingRoomId) {
+      this.meetingRoomService.getMeetingRoomById(meetingRoomId).subscribe(
+        (meetingRoom: MeetingRoom) => {
+          this.meetingRoom = meetingRoom;
+          this.reservationService.getReservationsByMeetingRoom(meetingRoomId).subscribe(
+            (events: any[]) => {
+              this.calendarOptions.events = events;
+            },
+            (error: any) => {
+              console.error('Error fetching reservations:', error);
+            }
+          );
+        },
+        (error: any) => {
+          console.error('Error fetching meeting room:', error);
+        }
+      );
+    }
+  }
+
+  reserveRoom(): void {
+    this.router.navigate(['/reservation-create', this.meetingRoom._id]);
+  }
+}

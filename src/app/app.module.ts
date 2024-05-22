@@ -1,5 +1,11 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+import { FullCalendarModule } from '@fullcalendar/angular'; 
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { RoleGuardService as RoleGuard } from './__services/role-guard.service';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -15,6 +21,12 @@ import { ReservationListComponent } from './reservation/reservation-list/reserva
 import { ReservationCreateComponent } from './reservation/reservation-create/reservation-create.component';
 import { ReservationUpdateComponent } from './reservation/reservation-update/reservation-update.component';
 import { HomeComponent } from './home/home.component';
+import { MeetingRoomConsultComponent } from './meeting-room/meeting-room-consult/meeting-room-consult.component';
+import { ReservationListUserComponent } from './reservation/reservation-list-user/reservation-list-user.component';
+import { ErrorComponent } from './error/error/error.component';
+import { Error401Component } from './error/error401/error401.component';
+import { Error403Component } from './error/error403/error403.component';
+import { Error404Component } from './error/error404/error404.component';
 
 @NgModule({
   declarations: [
@@ -30,13 +42,24 @@ import { HomeComponent } from './home/home.component';
     ReservationListComponent,
     ReservationCreateComponent,
     ReservationUpdateComponent,
-    HomeComponent
+    HomeComponent,
+    MeetingRoomConsultComponent,
+    ReservationListUserComponent,
+    ErrorComponent,
+    Error401Component,
+    Error403Component,
+    Error404Component
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule,
+    FormsModule,
+    ReactiveFormsModule,
+    FullCalendarModule,
+    MatToolbarModule
   ],
-  providers: [],
+  providers: [RoleGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

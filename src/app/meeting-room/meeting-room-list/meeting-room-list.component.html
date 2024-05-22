@@ -1,1 +1,39 @@
-<p>meeting-room-list works!</p>
+<div class="container d-flex flex-column justify-content-center align-items-center text-center">
+ 
+    <h1 class="display-4 mb-4 text-white animated fadeInDown">Meeting Rooms</h1>
+  
+    <div class="input-group mb-3 animated fadeInUp" style="width: 90%;">
+      <input type="text" class="form-control" placeholder="Search by name or equipments" aria-label="Search for meeting rooms" aria-describedby="button-addon2" #searchInput>
+      <div class="input-group-append">
+        <button class="btn btn-outline-secondary" type="button" id="button-addon2" (click)="searchMeetingRooms(searchInput.value)">Search</button>
+      </div>
+    </div>
+    <div class="row animated fadeInUp" style="width: 90%;">
+      <div *ngFor="let room of meetingRooms; let i = index" class="col-lg-4 col-md-6 d-flex justify-content-center">
+        <div class="card shadow-lg p-3 mb-5 bg-white rounded animated fadeInUp" style="width: 24rem;">
+          <div class="card-body">
+            <h5 class="card-title">{{ room.name }}</h5>
+            <p class="card-text">Capacity: {{ room.capacity }}</p>
+            <p class="card-text">Equipments: {{ room.equipments.join(', ') }}</p>
+            <p class="card-text">Availability: {{ room.availability ? 'Available' : 'Not Available' }}</p>
+            <div class="btn-group-vertical flex-wrap animated fadeInUp" role="group" aria-label="Meeting Room Actions">
+              <button *ngIf="authService.isAdmin()" type="button" class="btn btn-primary mb-2 shadow" (click)="updateMeetingRoom(room._id)">Update</button>
+              <button *ngIf="authService.isAdmin()" type="button" class="btn btn-danger mb-2 shadow" (click)="deleteMeetingRoom(room._id)">Delete</button>
+              <button type="button" class="btn btn-info shadow" (click)="consultRoom(room._id)">Consult</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button *ngIf="authService.isAdmin()" type="button" class="btn btn-success btn-lg btn-block animated fadeInDown shadow-lg" (click)="addMeetingRoom()">Add Meeting Room</button>
+    <nav aria-label="Page navigation example" class="mt-3 animated fadeInUp">
+      <ul class="pagination justify-content-center">
+        <li class="page-item" [class.disabled]="page <= 1">
+          <a type="button" class="page-link" (click)="previousPage()">Previous</a>
+        </li>
+        <li class="page-item" [class.disabled]="page >= totalPages">
+          <a type="button" class="page-link" (click)="nextPage()">Next</a>
+        </li>
+      </ul>
+    </nav>
+  </div>

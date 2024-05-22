@@ -1,0 +1,13 @@
+<div class="container">
+    <div class="room-info">
+      <h2>{{ meetingRoom.name }}</h2>
+      <p><strong>Capacity:</strong> {{ meetingRoom.capacity }}</p>
+      <p><strong>Equipments:</strong> {{ meetingRoom.equipments.join(', ') }}</p>
+      <p><strong>Availability:</strong> {{ meetingRoom.availability ? 'Available' : 'Not Available' }}</p>
+      <button (click)="reserveRoom()">Reserve this Room</button>
+    </div>
+    <div class="calendar-container">
+      <h1>Reservations</h1>
+      <full-calendar [options]="calendarOptions"></full-calendar>
+    </div>
+ </div>
